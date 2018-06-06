@@ -10,14 +10,14 @@ pipeline{
             }
 	}
      
-	stage('Results'){
+	stage('Check Results'){
             steps{
                         archiveArtifacts artifacts: '**/target/*.war, **/target/*.jar', fingerprint: true
             junit '**/target/**/*.xml'
             }	
         }
 	    
-        stage('Publish') {
+        stage('Nexus Deploy') {
 	    	steps{ 
 			nexusArtifactUploader(
     				nexusVersion: 'nexus2.14.8',
@@ -28,19 +28,12 @@ pipeline{
     				repository: 'Releases',
     				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
     				artifacts: [
-        				[artifactId: time-tracker-web,
-         				classifier: '',
-         				file: 'time-tracker-web' + ${env.BUILD_NUMBER} + '.war',
-         				type: 'war']
-    				]
-				artifacts: [
-        				[artifactId: time-tracker-core,
-         				classifier: '',
-         				file: 'time-tracker-core' + ${env.BUILD_NUMBER} + '.jar',
-         				type: 'jar']
+        				[artifactId: time-tracker-web, classifier: '', 
+					 file: 'time-tracker-web' + ${env.BUILD_NUMBER} + '.war', type: 'war']
+    					[artifactId: time-tracker-core, classifier: '', 
+					 file: 'time-tracker-core' + ${env.BUILD_NUMBER} + '.jar', type: 'jar']
     				]
  			)
-			
         	}
 	} 
 	    
