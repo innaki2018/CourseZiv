@@ -11,13 +11,13 @@ pipeline{
      
 	stage('Tests'){
   	    steps{ 		
-	       junit '**/target/*.xml'     
+	       junit '**/target/**/*.xml'     
  	    }		
 	}
 	
 	 stage('Archive'){
             steps{
-                archiveArtifacts artifacts: '**/target/*.war','**/target/*.jar' 
+                archiveArtifacts artifacts: '**/target/**/*.war, **/target/**/*.jar' 
             }	
         }
 
