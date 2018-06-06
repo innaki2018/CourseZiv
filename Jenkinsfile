@@ -19,19 +19,23 @@ pipeline{
 	    
         stage('Nexus Deploy') {
 	    	steps{ 
+			script {
+                		def pom.version = readMavenPom file: 'pom.xml'
+			}			
+			
 			nexusArtifactUploader(
     				nexusVersion: 'nexus2.14.8',
     				protocol: 'http',
     				nexusUrl: 'innaki-master:8081/nexus',
     				groupId: 'clinic.programming.time-tracker',
-    				version: ${BUILD_NUMBER},
+    				version: ${pom.version},
     				repository: 'Releases',
     				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
     				artifacts: [
         				[artifactId: time-tracker-web, classifier: '', 
-					 file: 'time-tracker-web' + ${BUILD_NUMBER} + '.RELEASE' + '.war', type: 'war']
+					 file: 'time-tracker-web' + ${pom.version} + '.RELEASE' + '.war', type: 'war']
     					[artifactId: time-tracker-core, classifier: '', 
-					 file: 'time-tracker-core' + ${BUILD_NUMBER} + '.RELEASE' + '.jar', type: 'jar']
+					 file: 'time-tracker-core' + ${pom.version} + '.RELEASE' + '.jar', type: 'jar']
     				]
  			)
         	}
