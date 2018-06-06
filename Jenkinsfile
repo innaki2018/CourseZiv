@@ -19,31 +19,33 @@ pipeline{
 	    
         stage('Publish') {
 	    	steps{ 
-                   	nexusArtifactUploader {
-        			nexusVersion('nexus2.14.8')
-        			protocol('http')
-        			nexusUrl('innaki-master:8081/nexus')
-        			groupId('clinic.programming.time-tracker')
-        			version('${env.BUILD_NUMBER}')
-        			repository('releases')
-        			credentialsId('44620c50-1589-4617-a677-7563985e46e1')
-        			artifact {
-            				artifactId('time-tracker-web')
-           				type('war')
-            				classifier('')
-            				file('time-tracker-web.war')
-      				}
-        			artifact {
-            				artifactId('time-tracker-core')
-            				type('jar')
-            				classifier('')
-            				file('time-tracker-core.jar')
-        			}
-      			}
-    		}
+			nexusArtifactUploader(
+    				nexusVersion: 'nexus2.14.8',
+    				protocol: 'http',
+    				nexusUrl: 'innaki-master:8081/nexus',
+    				groupId: 'clinic.programming.time-tracker',
+    				version: ${env.BUILD_NUMBER},
+    				repository: 'Releases',
+    				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
+    				artifacts: [
+        				[artifactId: time-tracker-web,
+         				classifier: '',
+         				file: 'time-tracker-web' + ${env.BUILD_NUMBER} + '.war',
+         				type: 'war']
+    				]
+				artifacts: [
+        				[artifactId: time-tracker-core,
+         				classifier: '',
+         				file: 'time-tracker-core' + ${env.BUILD_NUMBER} + '.jar',
+         				type: 'jar']
+    				]
+ 			)
+			
+        	}
 	} 
 	    
 
 	    
    }
+	
 }
