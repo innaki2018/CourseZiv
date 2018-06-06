@@ -8,7 +8,7 @@ pipeline{
                 sh "cd sourceArea && mvn -B versions:set -DnewVersion=${env.BUILD_NUMBER} &&  mvn clean package "
             }
 	}
-	
+    }	
     
    
    
