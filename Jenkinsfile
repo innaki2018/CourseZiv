@@ -29,9 +29,9 @@ pipeline{
     				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
     				artifacts: [
         				[artifactId: time-tracker-web, classifier: '', 
-					 file: 'time-tracker-web' + ${BUILD_NUMBER} + '.war', type: 'war']
+					 file: 'time-tracker-web' + ${BUILD_NUMBER} + '.RELEASE' + '.war', type: 'war']
     					[artifactId: time-tracker-core, classifier: '', 
-					 file: 'time-tracker-core' + ${BUILD_NUMBER} + '.jar', type: 'jar']
+					 file: 'time-tracker-core' + ${BUILD_NUMBER} + '.RELEASE' + '.jar', type: 'jar']
     				]
  			)
         	}
