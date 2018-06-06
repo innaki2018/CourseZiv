@@ -19,9 +19,9 @@ pipeline{
 	    
         stage('Nexus Deploy') {
 	    	steps{ 
-			script {
-                		def pom.version = readMavenPom file: 'pom.xml'
-			}			
+			environment {
+   			    pom.version = readMavenPom().getVersion()
+			}
 			
 			nexusArtifactUploader(
     				nexusVersion: 'nexus2.14.8',
