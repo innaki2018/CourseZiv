@@ -9,18 +9,14 @@ pipeline{
             }
 	}
      
-	stage('Tests'){
-  	    steps{ 		
-	       junit '**/target/**/*.xml'     
- 	    }		
-	}
-	
-	 stage('Archive'){
+	stage('Archive'){
             steps{
-                archiveArtifacts artifacts: '**/target/**/*.war, **/target/**/*.jar' 
+                archiveArtifacts artifacts: '**/target/**/*.war, **/target/**/*.jar', fingerprint: true
+            junit '**/target/**/*.xml'
             }	
         }
-
+	    
     }
    
+	
 }
