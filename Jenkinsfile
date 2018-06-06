@@ -19,20 +19,21 @@ pipeline{
 	    
         stage('Nexus Deploy') {
 	    	steps{ 
+			def BuildVer=${BUILD_NUMBER}
 			
 			nexusArtifactUploader(
     				nexusVersion: 'nexus2.14.8',
     				protocol: 'http',
     				nexusUrl: 'innaki-master:8081/nexus',
     				groupId: 'clinic.programming.time-tracker',
-    				version: ${BUILD_NUMBER},
+				version: ${BuildVer},
     				repository: 'Releases',
     				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
     				artifacts: [
         				[artifactId: time-tracker-web, classifier: '', 
-					 file: 'time-tracker-web' + version + '.RELEASE' + '.war', type: 'war']
+					 file: 'time-tracker-web' + ${BuildVer} + '.RELEASE' + '.war', type: 'war']
     					[artifactId: time-tracker-core, classifier: '', 
-					 file: 'time-tracker-core' + $version + '.RELEASE' + '.jar', type: 'jar']
+					 file: 'time-tracker-core' + ${BuildVer} + '.RELEASE' + '.jar', type: 'jar']
     				]
  			)
         	}
