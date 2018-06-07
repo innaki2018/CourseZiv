@@ -10,28 +10,46 @@ pipeline{
             }
 	}
      
-	stage('Check Results'){
+	stage('Results'){
             steps{
                         archiveArtifacts artifacts: '**/target/*.war, **/target/*.jar', fingerprint: true
             junit '**/target/**/*.xml'
             }	
         }
 	    
+	 
+	stage('Sonar Analysis') { 
+        	withSonarQubeEnv('Sonar') { 
+          		sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
+          			'-f all/pom.xml ' +
+          			'-Dsonar.projectKey=com.huettermann:all:master ' +
+          			'-Dsonar.login=sonar ' +
+          			'-Dsonar.password=unix11 ' +
+          			'-Dsonar.language=java ' +
+          			'-Dsonar.sources=. ' +
+          			'-Dsonar.tests=. ' +
+          			'-Dsonar.test.inclusions=**/*Test*/** ' +
+         	 		'-Dsonar.exclusions=**/*Test*/**'
+        }
+    }
 	    
-	stage('Publish') {
-     		nexusPublisher nexusInstanceId: 'localNexus', 
-			nexusRepositoryId: 'releases', 
-			packages: [[$class: 'MavenPackage', 
-				    mavenAssetList: [[classifier: '', 
-						      extension: 'RELEASE', 
-						      filePath: 'web/target/*.war']], 
-				    mavenCoordinate: [artifactId: 'time-tracker-web', 
-						      groupId: 'clinic.programming.time-tracker', 
-						      packaging: 'war', version: '${BUILD_NUMBER}']]]
-   	}
 	    
+	 stage('Nexus Deploy'){
+	 	steps{
+			    sh "mvn deploy:deploy-file 
+			    	-DgroupId=com.somecompany 
+			    	-DartifactId=project 
+			    	-Dversion=1.0.0-SNAPSHOT 
+			    	-DgeneratePom=true 
+			    	-Dpackaging=jar 
+			    	-DrepositoryId=nexus 
+			    	-Durl=http://localhost:8081/nexus/content/repositories/snapshots 
+				-Dfile=target/project-1.0.0-SNAPSHOT.jar"
+		}
+	 }
 	    
-        /*stage('Nexus Deploy') {
+        
+	    /*stage('Nexus Deploy') {
 	    	steps{ 
 						
 			nexusArtifactUploader(
