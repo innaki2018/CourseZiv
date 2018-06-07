@@ -6,7 +6,7 @@ pipeline{
 	    
         stage('Build'){
             steps{
-		        sh "mvn -B versions:set -DnewVersion=${env.BUILD_NUMBER} &&  mvn clean package "
+		        sh 'mvn -B versions:set -DnewVersion=${env.BUILD_NUMBER} &&  mvn clean package '
             }
 	}
      
@@ -36,15 +36,15 @@ pipeline{
 	    
 	 stage('Nexus Deploy'){
 	 	steps{
-			    sh "mvn deploy:deploy-file 
-			    	-DgroupId=com.somecompany 
-			    	-DartifactId=project 
-			    	-Dversion=1.0.0-SNAPSHOT 
-			    	-DgeneratePom=true 
-			    	-Dpackaging=jar 
-			    	-DrepositoryId=nexus 
-			    	-Durl=http://localhost:8081/nexus/content/repositories/snapshots 
-				-Dfile=target/project-1.0.0-SNAPSHOT.jar"
+			    sh 'mvn deploy:deploy-file ' +
+			    	'-DgroupId=clinic.programming.time-tracker ' +
+			    	'-DartifactId=time-tracker-web ' +
+			    	'-Dversion=${env.BUILD_NUMBER}-RELEASE ' + 
+			    	'-DgeneratePom=true ' +
+			    	'-Dpackaging=war ' +
+			    	'-DrepositoryId=nexus ' + 
+			    	'-Durl=http://localhost:8081/nexus/content/repositories/releases ' + 
+				'-Dfile=web/target/.war '
 		}
 	 }
 	    
