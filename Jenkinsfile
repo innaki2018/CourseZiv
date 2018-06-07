@@ -20,16 +20,16 @@ pipeline{
 	 
 	stage('Sonar Analysis') { 
         	withSonarQubeEnv('Sonar') { 
-          		sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
-          			'-f all/pom.xml ' +
-          			'-Dsonar.projectKey=com.huettermann:all:master ' +
+				
+             		sh 'mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.3.0.603:sonar ' + 
+          			'-f pom.xml ' +
+          			'-Dsonar.projectKey=clinic.programming.time-tracker:all:master ' +
           			'-Dsonar.login=sonar ' +
           			'-Dsonar.password=unix11 ' +
           			'-Dsonar.language=java ' +
           			'-Dsonar.sources=. ' +
-          			'-Dsonar.tests=. ' +
-          			'-Dsonar.test.inclusions=**/*Test*/** ' +
-         	 		'-Dsonar.exclusions=**/*Test*/**'
+          			'-Dsonar.tests=. '
+          			
         }
     }
 	    
@@ -43,9 +43,9 @@ pipeline{
 			    	'-DgeneratePom=true ' +
 			    	'-Dpackaging=war ' +
 			    	'-DrepositoryId=nexus ' + 
-			    	'-Durl=http://localhost:8081/nexus/content/repositories/releases ' + 
+			    	'-Durl=http://innaki-master:8081/nexus/content/repositories/releases ' + 
 				'-Dfile=web/target/.war '
-		}
+					}
 	 }
 	    
         
@@ -61,10 +61,10 @@ pipeline{
     				repository: 'Releases',
     				credentialsId: '44620c50-1589-4617-a677-7563985e46e1',
     				artifacts: [
-        				[artifactId: time-tracker-web, classifier: '', extension: 'RELEASE',
-					 file: 'time-tracker-web' + '${BUILD_NUMBER}' + '.war', type: 'war']
-    					[artifactId: time-tracker-core, classifier: '', extension: 'RELEASE',
-					 file: 'time-tracker-core' + '${BUILD_NUMBER}' + '.jar', type: 'jar']
+        				[artifactId: time-tracker-web, classifier: '', extension: '',
+					 file: 'time-tracker-web' + '${BUILD_NUMBER}' + '-RELEASE' '.war', type: 'war']
+    					[artifactId: time-tracker-core, classifier: '', extension: '',
+					 file: 'time-tracker-core' + '${BUILD_NUMBER}' + '-RELEASE' + '.jar', type: 'jar']
     				]
  			)
         	}
