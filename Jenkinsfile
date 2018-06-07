@@ -17,9 +17,23 @@ pipeline{
             }	
         }
 	    
-        stage('Nexus Deploy') {
+	    
+	stage('Publish') {
+     		nexusPublisher nexusInstanceId: 'localNexus', 
+			nexusRepositoryId: 'releases', 
+			packages: [[$class: 'MavenPackage', 
+				    mavenAssetList: [[classifier: '', 
+						      extension: 'RELEASE', 
+						      filePath: 'web/target/*.war']], 
+				    mavenCoordinate: [artifactId: 'time-tracker-web', 
+						      groupId: 'clinic.programming.time-tracker', 
+						      packaging: 'war', version: '${BUILD_NUMBER}']]]
+   	}
+	    
+	    
+        /*stage('Nexus Deploy') {
 	    	steps{ 
-			
+						
 			nexusArtifactUploader(
     				nexusVersion: 'nexus2.14.8',
     				protocol: 'http',
@@ -36,7 +50,8 @@ pipeline{
     				]
  			)
         	}
-	} 
+	} */
+	    
 	    
 
 	    
